@@ -1,6 +1,7 @@
 import logging
-
-
+import configparser
+from flask import Flask, request, abort
+from linebot import LineBotApi, WebhookHandler
 
 #region 主程式碼
 
@@ -16,7 +17,19 @@ try:
 
     #endregion
 
+    #region 讀取config設定檔
 
+    config = configparser.ConfigParser()
+    config.read('config.ini', encoding="utf-8")
+
+    #endregion
+
+    #建立實體
+    app = Flask(__name__)
+
+    #LINE Bot 設定
+    line_bot_api = LineBotApi(config.get('protobot1', 'channel_access_token'))
+    handler = WebhookHandler(config.get('protobot1', 'channel_secret'))
 
 
 except Exception as e:
@@ -25,3 +38,7 @@ except Exception as e:
 
 
 #endregion
+
+#啟動程式
+if __name__ == "__main__":
+    app.run()
